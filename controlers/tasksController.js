@@ -22,6 +22,13 @@ function getTask(id) {
     return tasks.find(t => t.id == id) || null;
 }
 
+// Función para obtner un ID unico y nuevo dentro del arreglo de tasks
+// Retorna un numero correspondiente al id mas grande actual más 1
+function newID() {
+    const maxID = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) : 0;
+    return maxID + 1;
+}
+
 // Función para crear una nueva tarea
 // Parámetros:
 //   title (String): Título de la tarea
@@ -29,7 +36,10 @@ function getTask(id) {
 // Retorna la tarea recién creada
 function createTask(title, description){
     // Crear una nueva instancia de Task con un ID único
-    const newTask = new Task(tasks.length + 1, title, description);
+    // const newTask = new Task(tasks.length + 1, title, description);
+
+    const newTask = new Task(newID(), title, description);
+
 
     // Añadir la nueva tarea a la lista de tareas
     tasks.push(newTask);
