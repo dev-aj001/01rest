@@ -11,7 +11,11 @@ router.get('/', function(req, res){
     // Obtener todas las tareas llamando a la función getAllTasks del controlador
     const tasks = tasksController.getAllTasks();
     // Responder con el código de estado 200 y las tareas en formato JSON
-    res.status(200).json(tasks);
+    if(tasks.length > 0){
+        res.status(200).json(tasks);
+    }else{
+        res.status(404).json({code: '404', message: 'Tasks not found'});
+    }
 });
 
 // Método GET id (obtener una tarea por ID)
@@ -30,7 +34,7 @@ router.get('/:id', function(req, res){
         res.status(200).json(task);
     }else{
         // Responder con el código de estado 404 y un mensaje de "Tarea no encontrada"
-        res.status(404).json({message: 'Task not found'});
+        res.status(404).json({code: 404, message: 'Task not found'});
     }
 });
 
@@ -44,7 +48,11 @@ router.post('/', function(req, res){
     // Llamar a la función createTask del controlador para crear la nueva tarea
     const task = tasksController.createTask(title, description);
     // Responder con el código de estado 200 y la nueva tarea en formato JSON
-    res.status(200).json(task);
+    if( !title || !description ){
+        res.status(400).json({code: 400, message: 'Bad request'});
+    }else {
+        res.status(201).json(task);
+    }
 });
 
 // Método DELETE (eliminar una tarea)
@@ -63,7 +71,7 @@ router.delete('/:id', function(req, res){
         res.status(200).json(task);
     }else{
         // Responder con el código de estado 404 y un mensaje de "Tarea no encontrada"
-        res.status(404).json({ message: 'Task not found' });
+        res.status(404).json({code: 404, message: 'Task not found' });
     }
 });
 
@@ -75,23 +83,23 @@ router.put('/:id', function(req, res){
     const id = req.params.id;
     // Obtener los datos de la tarea a actualizar del cuerpo de la solicitud
     const { title, description, completed } = req.body;
-    
+
     // Llamar a la función updateTask del controlador para actualizar la tarea
     const task = tasksController.updateTask(id, title, description, completed);
-    
+
     // Verificar si la tarea fue encontrada y actualizada
     if(task){
         // Responder con el código de estado 200 y la tarea actualizada en formato JSON
         res.status(200).json(task);
     }else{
         // Responder con el código de estado 404 y un mensaje de "Tarea no encontrada"
-        res.status(404).json({ message: 'Task not found' });
+        res.status(404).json({code: 404, message: 'Task not found' });
     }
 });
 
 // Método PATCH (actualizar parcialmente una tarea)
 // Ruta: PATCH /tasks/:id
-// Actualiza parcialmente una tarea específica (solo el estado completado) 
+// Actualiza parcialmente una tarea específica (solo el estado completado)
 router.patch('/:id', function(req, res){
     // Obtener el ID de la tarea desde el parámetro de la URL
     const id = req.params.id;
@@ -105,7 +113,7 @@ router.patch('/:id', function(req, res){
         res.status(200).json(task);
     }else{
         // Responder con el código de estado 404 y un mensaje de "Tarea no encontrada"
-        res.status(404).json({ message: 'Task not found' });
+        res.status(404).json({code: 404, message: 'Task not found' });
     }
 });
 

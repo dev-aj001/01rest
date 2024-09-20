@@ -77,9 +77,9 @@ function updateTask(id, title, description, completed){
     const task = tasks.find(t => t.id == id);
     if(task){
         // Actualizar los campos de la tarea
-        task.title = title;
-        task.description = description;
-        task.completed = completed;
+        task.title = title || task.title;
+        task.description = description || task.description;
+        task.completed = completed || task.completed;
         // Retornar la tarea actualizada
         return task;
     }
